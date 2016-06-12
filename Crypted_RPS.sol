@@ -144,7 +144,8 @@ contract Crypted_RPS
     function () {throw;} //no callback, use the functions to play
 
     modifier payexpired2Duel{
-        if (duels2Decrypt.length>firstActiveDuel2 && duels2Decrypt[firstActiveDuel2].timeStamp + expirationTime <= now) {
+        if (duels2Decrypt.length>firstActiveDuel2 && duels2Decrypt[firstActiveDuel2].timeStamp + expirationTime <= now &&
+        !duels2Decrypt[firstActiveDuel2].decrypted ) {
             duels2Decrypt[firstActiveDuel2].player_1.send(gambleValue-house);
             duels2Decrypt[firstActiveDuel2].player_2.send(gambleValue-house);
             houseTotal+=2*house;
@@ -157,7 +158,8 @@ contract Crypted_RPS
     }
 
     modifier payexpired1Duel{
-        if (duels1Decrypt.length>firstActiveDuel1 && (duels1Decrypt[firstActiveDuel1].timeStamp + expirationTime) < now) {
+        if (duels1Decrypt.length>firstActiveDuel1 && (duels1Decrypt[firstActiveDuel1].timeStamp + expirationTime) < now
+        && !!duels1Decrypt[firstActiveDuel1].decrypted) {
             duels1Decrypt[firstActiveDuel1].player_1.send(2*(gambleValue-house));
             houseTotal+=2*house;
             duels1Decrypt[firstActiveDuel1].decrypted = true;
@@ -324,7 +326,7 @@ contract Crypted_RPS
      {
          if (bet_id==firstActiveDuel2)
          {   
-              uint index;
+              uint index=firstActiveDuel2-1;
               while (true) {
                  if (index<duels2Decrypt.length && duels2Decrypt[index].decrypted){
                      index=index+1;
@@ -340,7 +342,7 @@ contract Crypted_RPS
      {
          if (bet_id==firstActiveDuel1)
          {   
-              uint index;
+              uint index=firstActiveDuel1-1;
               while (true) {
                  if (index<duels1Decrypt.length && duels1Decrypt[index].decrypted){
                      index=index+1;
